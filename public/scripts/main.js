@@ -54,30 +54,27 @@ function createProjectElement(project) {
   const imgContainer = document.createElement('div');
   imgContainer.className = 'portfolio-img';
   
-  const img = document.createElement('img');
-  img.src = project.coverImage || '/img/portfolio/placeholder.jpg';
-  img.alt = project.name;
-  img.className = 'img-fluid';
-  
-  const overlay = document.createElement('div');
-  overlay.className = 'portfolio-overlay';
-  
-  const link = document.createElement('a');
-  link.href = project.url || '#';
-  link.className = 'popup';
+  const iconContainer = document.createElement('div');
+  iconContainer.className = 'project-icon';
+  iconContainer.innerHTML = `<i class="${project.icon || 'fas fa-rocket'}"></i>`;
   
   const title = document.createElement('h4');
-  title.textContent = project.name;
+  title.textContent = project.title;
   
-  const category = document.createElement('p');
-  category.textContent = project.category || '';
+  const description = document.createElement('p');
+  description.textContent = project.description;
   
-  imgContainer.appendChild(img);
-  overlay.appendChild(link);
-  overlay.appendChild(title);
-  overlay.appendChild(category);
-  imgContainer.appendChild(overlay);
+  const link = document.createElement('a');
+  link.href = project.link || '#';
+  link.className = 'project-link';
+  
+  imgContainer.appendChild(iconContainer);
   portfolioItem.appendChild(imgContainer);
+  portfolioItem.appendChild(title);
+  portfolioItem.appendChild(description);
+  if (project.link) {
+    portfolioItem.appendChild(link);
+  }
   col.appendChild(portfolioItem);
   
   return col;
@@ -126,10 +123,15 @@ function createTestimonialElement(testimonial, isActive) {
   const content = document.createElement('div');
   content.className = 'testimonial-content text-center';
   
-  const img = document.createElement('img');
-  img.src = testimonial.avatar || '/img/testimonial/placeholder.jpg';
-  img.alt = testimonial.name;
-  img.className = 'img-fluid rounded-circle mx-auto';
+  const nameInitials = testimonial.name
+    .split(' ')
+    .map(n => n[0])
+    .join('')
+    .toUpperCase();
+  
+  const avatar = document.createElement('div');
+  avatar.className = 'testimonial-avatar';
+  avatar.textContent = nameInitials;
   
   const quote = document.createElement('p');
   quote.textContent = testimonial.quote;
@@ -137,13 +139,29 @@ function createTestimonialElement(testimonial, isActive) {
   const author = document.createElement('h3');
   author.textContent = testimonial.name;
   
-  const position = document.createElement('h4');
-  position.textContent = testimonial.position || '';
+  const company = document.createElement('h4');
+  company.textContent = testimonial.company || '';
   
-  content.appendChild(img);
+  const results = document.createElement('div');
+  results.className = 'testimonial-results';
+  
+  if (testimonial.results && testimonial.results.length > 0) {
+    testimonial.results.forEach(result => {
+      const resultItem = document.createElement('div');
+      resultItem.className = 'result-item';
+      resultItem.innerHTML = `
+        <i class="fas fa-check result-icon"></i>
+        <span>${result}</span>
+      `;
+      results.appendChild(resultItem);
+    });
+  }
+  
+  content.appendChild(avatar);
   content.appendChild(quote);
   content.appendChild(author);
-  content.appendChild(position);
+  content.appendChild(company);
+  content.appendChild(results);
   item.appendChild(content);
   
   return item;
@@ -192,17 +210,12 @@ function createServiceElement(service) {
   const serviceBox = document.createElement('div');
   serviceBox.className = 'service-box text-center';
   
-  const icon = document.createElement('div');
-  icon.className = 'service-icon';
-  icon.innerHTML = `<i class="${service.icon || 'fas fa-cog'}"></i>`;
-  
   const title = document.createElement('h3');
-  title.textContent = service.name;
+  title.textContent = service.title;
   
   const description = document.createElement('p');
-  description.textContent = service.description || '';
+  description.textContent = service.content;
   
-  serviceBox.appendChild(icon);
   serviceBox.appendChild(title);
   serviceBox.appendChild(description);
   col.appendChild(serviceBox);

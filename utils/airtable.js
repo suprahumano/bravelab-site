@@ -21,20 +21,20 @@ async function getProjects() {
   try {
     const records = await base('Projects')
       .select({
-        view: 'Grid view', // Domyślny widok lub zmień na nazwę konkretnego widoku
-        sort: [{ field: 'Order', direction: 'asc' }] // Sortowanie według pola "Order" (jeśli istnieje)
+        view: 'Grid view',
+        sort: [{ field: 'Order', direction: 'asc' }]
       })
       .all();
     
-    // Transformujemy rekordy do prostszej struktury
     return records.map(record => ({
       id: record.id,
-      name: record.get('Name'),
+      title: record.get('Title'),
       description: record.get('Description'),
       status: record.get('Status'),
-      imageUrl: record.get('ImageURL'),
-      url: record.get('URL'),
-      order: record.get('Order')
+      icon: record.get('Icon'),
+      link: record.get('Link'),
+      order: record.get('Order'),
+      active: record.get('Active') || false
     }));
   } catch (error) {
     console.error('Błąd podczas pobierania projektów:', error);
@@ -58,12 +58,10 @@ async function getTestimonials() {
     return records.map(record => ({
       id: record.id,
       name: record.get('Name'),
-      role: record.get('Role'),
       company: record.get('Company'),
       quote: record.get('Quote'),
-      avatarUrl: record.get('AvatarURL'),
-      results: record.get('Results') ? JSON.parse(record.get('Results')) : [],
-      order: record.get('Order')
+      results: record.get('Results'),
+      active: record.get('Active') || false
     }));
   } catch (error) {
     console.error('Błąd podczas pobierania testimoniali:', error);
@@ -86,13 +84,10 @@ async function getServices() {
     
     return records.map(record => ({
       id: record.id,
-      name: record.get('Name'),
-      description: record.get('Description'),
-      icon: record.get('Icon'),
+      title: record.get('Title'),
+      content: record.get('Content'),
       order: record.get('Order'),
-      detailedDescription: record.get('DetailedDescription'),
-      price: record.get('Price'),
-      featured: record.get('Featured') || false
+      active: record.get('Active') || false
     }));
   } catch (error) {
     console.error('Błąd podczas pobierania usług:', error);
@@ -111,12 +106,10 @@ async function getServiceById(id) {
     
     return {
       id: record.id,
-      name: record.get('Name'),
-      description: record.get('Description'),
-      icon: record.get('Icon'),
-      detailedDescription: record.get('DetailedDescription'),
-      price: record.get('Price'),
-      featured: record.get('Featured') || false
+      title: record.get('Title'),
+      content: record.get('Content'),
+      order: record.get('Order'),
+      active: record.get('Active') || false
     };
   } catch (error) {
     console.error(`Błąd podczas pobierania usługi o ID ${id}:`, error);
@@ -135,13 +128,13 @@ async function getProjectById(id) {
     
     return {
       id: record.id,
-      name: record.get('Name'),
+      title: record.get('Title'),
       description: record.get('Description'),
       status: record.get('Status'),
-      imageUrl: record.get('ImageURL'),
-      url: record.get('URL'),
-      detailedDescription: record.get('DetailedDescription'),
-      technologies: record.get('Technologies') ? record.get('Technologies').split(',') : []
+      icon: record.get('Icon'),
+      link: record.get('Link'),
+      order: record.get('Order'),
+      active: record.get('Active') || false
     };
   } catch (error) {
     console.error(`Błąd podczas pobierania projektu o ID ${id}:`, error);
