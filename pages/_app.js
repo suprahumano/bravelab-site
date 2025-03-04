@@ -1,11 +1,12 @@
 import '../styles/main.css';
-import { SpeedInsights } from '@vercel/speed-insights/next';
+// Usuwam import SpeedInsights, który powoduje błąd
+// import { SpeedInsights } from '@vercel/speed-insights/next';
 
 function MyApp({ Component, pageProps }) {
   return (
     <>
       <Component {...pageProps} />
-      <SpeedInsights />
+      {/* Usuwam komponent SpeedInsights */}
     </>
   );
 }

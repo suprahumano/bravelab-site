@@ -3,6 +3,7 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+  console.log('Dokument załadowany, rozpoczynam pobieranie danych...');
   // Załaduj wszystkie dane potrzebne na stronie
   loadProjects();
   loadTestimonials();
@@ -14,12 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
  */
 async function loadProjects() {
   try {
-    const response = await fetch('/api/projects');
-    if (!response.ok) {
-      throw new Error('Nie udało się pobrać projektów');
-    }
+    console.log('Rozpoczynam pobieranie projektów...');
     
-    const projects = await response.json();
     const projectsContainer = document.querySelector('#projects .row') || document.querySelector('#projects');
     
     if (!projectsContainer) {
@@ -27,17 +24,53 @@ async function loadProjects() {
       return;
     }
     
+    // Aktualizacja indicatora ładowania
+    projectsContainer.innerHTML = `
+      <div class="loading-indicator">
+        <i class="fas fa-spinner fa-spin"></i>
+        <p>Ładowanie projektów...</p>
+      </div>
+    `;
+    
+    const response = await fetch('/api/projects');
+    console.log('Odpowiedź API projektów:', response.status, response.statusText);
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Nie udało się pobrać projektów: ${response.status} ${response.statusText}, ${errorText}`);
+    }
+    
+    const projects = await response.json();
+    console.log(`Pobrano ${projects.length} projektów:`, projects);
+    
     // Wyczyść istniejące projekty (jeśli istnieją)
     projectsContainer.innerHTML = '';
     
-    // Dodaj projekty do kontenera
-    projects.forEach(project => {
-      const projectElement = createProjectElement(project);
-      projectsContainer.appendChild(projectElement);
-    });
+    // Dodaj projekty do kontenera lub wyświetl komunikat
+    if (projects && projects.length > 0) {
+      projects.forEach(project => {
+        const projectElement = createProjectElement(project);
+        projectsContainer.appendChild(projectElement);
+      });
+    } else {
+      projectsContainer.innerHTML = `<div class="col-12 text-center">
+        <p>Brak dostępnych projektów.</p>
+      </div>`;
+    }
     
   } catch (error) {
     console.error('Błąd podczas ładowania projektów:', error);
+    
+    // Wyświetl komunikat o błędzie na stronie
+    const projectsContainer = document.querySelector('#projects .row') || document.querySelector('#projects');
+    if (projectsContainer) {
+      projectsContainer.innerHTML = `
+        <div class="col-12 text-center error-message">
+          <i class="fas fa-exclamation-triangle"></i>
+          <p>Nie udało się pobrać projektów. Błąd: ${error.message}</p>
+        </div>
+      `;
+    }
   }
 }
 
@@ -85,12 +118,8 @@ function createProjectElement(project) {
  */
 async function loadTestimonials() {
   try {
-    const response = await fetch('/api/testimonials');
-    if (!response.ok) {
-      throw new Error('Nie udało się pobrać testimoniali');
-    }
+    console.log('Rozpoczynam pobieranie testimoniali...');
     
-    const testimonials = await response.json();
     const testimonialsContainer = document.querySelector('#testimonials .carousel-inner') || 
                                 document.querySelector('#testimonials');
     
@@ -99,17 +128,58 @@ async function loadTestimonials() {
       return;
     }
     
+    // Aktualizacja indicatora ładowania
+    testimonialsContainer.innerHTML = `
+      <div class="loading-indicator">
+        <i class="fas fa-spinner fa-spin"></i>
+        <p>Ładowanie opinii...</p>
+      </div>
+    `;
+    
+    const response = await fetch('/api/testimonials');
+    console.log('Odpowiedź API testimoniali:', response.status, response.statusText);
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Nie udało się pobrać testimoniali: ${response.status} ${response.statusText}, ${errorText}`);
+    }
+    
+    const testimonials = await response.json();
+    console.log(`Pobrano ${testimonials.length} testimoniali:`, testimonials);
+    
     // Wyczyść istniejące testimoniale (jeśli istnieją)
     testimonialsContainer.innerHTML = '';
     
-    // Dodaj testimoniale do kontenera
-    testimonials.forEach((testimonial, index) => {
-      const testimonialElement = createTestimonialElement(testimonial, index === 0);
-      testimonialsContainer.appendChild(testimonialElement);
-    });
+    // Dodaj testimoniale do kontenera lub wyświetl komunikat
+    if (testimonials && testimonials.length > 0) {
+      testimonials.forEach((testimonial, index) => {
+        const testimonialElement = createTestimonialElement(testimonial, index === 0);
+        testimonialsContainer.appendChild(testimonialElement);
+      });
+    } else {
+      testimonialsContainer.innerHTML = `<div class="carousel-item active">
+        <div class="testimonial-content text-center">
+          <p>Brak dostępnych opinii.</p>
+        </div>
+      </div>`;
+    }
     
   } catch (error) {
     console.error('Błąd podczas ładowania testimoniali:', error);
+    
+    // Wyświetl komunikat o błędzie na stronie
+    const testimonialsContainer = document.querySelector('#testimonials .carousel-inner') || 
+                                document.querySelector('#testimonials');
+    if (testimonialsContainer) {
+      testimonialsContainer.innerHTML = `
+        <div class="carousel-item active">
+          <div class="testimonial-content text-center error-message">
+            <i class="fas fa-exclamation-triangle"></i>
+            <p>Nie udało się pobrać opinii. Błąd: ${error.message}</p>
+          </div>
+        </div>
+      `;
+    }
   }
 }
 
@@ -172,12 +242,8 @@ function createTestimonialElement(testimonial, isActive) {
  */
 async function loadServices() {
   try {
-    const response = await fetch('/api/services');
-    if (!response.ok) {
-      throw new Error('Nie udało się pobrać usług');
-    }
+    console.log('Rozpoczynam pobieranie usług...');
     
-    const services = await response.json();
     const servicesContainer = document.querySelector('#services .row') || 
                             document.querySelector('#services');
     
@@ -186,17 +252,54 @@ async function loadServices() {
       return;
     }
     
+    // Aktualizacja indicatora ładowania
+    servicesContainer.innerHTML = `
+      <div class="loading-indicator">
+        <i class="fas fa-spinner fa-spin"></i>
+        <p>Ładowanie usług...</p>
+      </div>
+    `;
+    
+    const response = await fetch('/api/services');
+    console.log('Odpowiedź API usług:', response.status, response.statusText);
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Nie udało się pobrać usług: ${response.status} ${response.statusText}, ${errorText}`);
+    }
+    
+    const services = await response.json();
+    console.log(`Pobrano ${services.length} usług:`, services);
+    
     // Wyczyść istniejące usługi (jeśli istnieją)
     servicesContainer.innerHTML = '';
     
-    // Dodaj usługi do kontenera
-    services.forEach(service => {
-      const serviceElement = createServiceElement(service);
-      servicesContainer.appendChild(serviceElement);
-    });
+    // Dodaj usługi do kontenera lub wyświetl komunikat
+    if (services && services.length > 0) {
+      services.forEach(service => {
+        const serviceElement = createServiceElement(service);
+        servicesContainer.appendChild(serviceElement);
+      });
+    } else {
+      servicesContainer.innerHTML = `<div class="col-12 text-center">
+        <p>Brak dostępnych usług.</p>
+      </div>`;
+    }
     
   } catch (error) {
     console.error('Błąd podczas ładowania usług:', error);
+    
+    // Wyświetl komunikat o błędzie na stronie
+    const servicesContainer = document.querySelector('#services .row') || 
+                            document.querySelector('#services');
+    if (servicesContainer) {
+      servicesContainer.innerHTML = `
+        <div class="col-12 text-center error-message">
+          <i class="fas fa-exclamation-triangle"></i>
+          <p>Nie udało się pobrać usług. Błąd: ${error.message}</p>
+        </div>
+      `;
+    }
   }
 }
 

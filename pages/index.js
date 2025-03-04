@@ -99,24 +99,31 @@ export default function Home() {
 
       {/* Footer */}
       <footer>
-        <div className="container footer-container">
-          <div className="footer-links">
-            <a href="#features">Podejście</a>
-            <a href="#philosophy">Filozofia</a>
-            <a href="#projects">Projekty</a>
-            <a href="#services">Usługi</a>
-            <a href="#testimonials">Opinie</a>
-            <a href="#contact">Kontakt</a>
+        <div className="container">
+          <div className="footer-content">
+            <div className="footer-logo">
+              <i className="fas fa-microchip" style={{ marginRight: '10px' }}></i>bravelab
+            </div>
+            <div className="footer-links">
+              <a href="#">Start</a>
+              <a href="#features">Podejście</a>
+              <a href="#philosophy">Filozofia</a>
+              <a href="#projects">Projekty</a>
+              <a href="#services">Usługi</a>
+            </div>
+            <div className="footer-social">
+              <a href="#" target="_blank"><i className="fab fa-github"></i></a>
+              <a href="#" target="_blank"><i className="fab fa-twitter"></i></a>
+              <a href="#" target="_blank"><i className="fab fa-linkedin"></i></a>
+            </div>
           </div>
-          <div className="footer-social">
-            <a href="#"><i className="fab fa-twitter"></i></a>
-            <a href="#"><i className="fab fa-linkedin"></i></a>
-            <a href="#"><i className="fab fa-instagram"></i></a>
-            <a href="#"><i className="fab fa-github"></i></a>
+          <div className="footer-bottom">
+            <p>&copy; {new Date().getFullYear()} Bravelab. Wszelkie prawa zastrzeżone.</p>
+            <div className="footer-diagnostic-links">
+              <a href="/api-test" target="_blank" className="diagnostic-link">Test API</a>
+              <a href="/api/status" target="_blank" className="diagnostic-link">Status API</a>
+            </div>
           </div>
-        </div>
-        <div className="copyright">
-          &copy; 2025 Bravelab. Wszystkie prawa zastrzeżone.
         </div>
       </footer>
     </div>

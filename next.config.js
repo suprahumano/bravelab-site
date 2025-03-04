@@ -1,19 +1,18 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Ustawienie trybu eksportu statycznego
-  output: 'export',
+  // Usuwam statyczny eksport, ponieważ używamy Vercel
+  // output: 'export',
   
-  // Konfiguracja obrazów dla eksportu statycznego
+  // Konfiguracja obrazów - zostawiamy optymalizację obrazów włączoną na Vercel
   images: {
-    unoptimized: true,
+    domains: ['dl.airtable.com'], // Dodajemy domenę Airtable, jeśli będziemy pobierać stamtąd obrazy
   },
   
-  // Pozwala na dostęp do plików statycznych
-  // i obsługuje pliki HTML jako strony
-  trailingSlash: true,
+  // Usuwam trailing slash, nie jest potrzebny na Vercel
+  // trailingSlash: true,
   
-  // Wyłącza używanie domyślnego folderu .next
-  distDir: 'out',
+  // Usuwam distDir, ponieważ Vercel używa domyślnej konfiguracji
+  // distDir: 'out',
   
   // Wyłącza ścisłe sprawdzanie typów dla komponentów API
   typescript: {
@@ -29,6 +28,21 @@ const nextConfig = {
   env: {
     // Dodaj zmienne środowiskowe, które mają być dostępne w przeglądarce
     NEXT_PUBLIC_SITE_URL: 'https://bravelab.pl',
+  },
+  
+  // Uproszczona konfiguracja nagłówków - tylko dobrze obsługiwane funkcje
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()'
+          }
+        ],
+      },
+    ];
   },
   
   // Konfiguracja webpack (opcjonalna)
